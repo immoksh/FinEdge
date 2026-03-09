@@ -13,7 +13,8 @@ async function addTransaction(req, res, next) {
 async function getAllTransactions(req, res, next) {
   try {
     const userId = req.user?.userId ?? null;
-    const transactions = await transactionService.getAllTransactions(userId);
+    const { category, date } = req.query;
+    const transactions = await transactionService.getAllTransactions(userId, { category, date });
     res.json(transactions);
   } catch (err) {
     next(err);

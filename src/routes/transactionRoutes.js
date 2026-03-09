@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-router.get('/summary', transactionController.getSummary);
+
 router.post('/', validateTransaction, transactionController.addTransaction);
 router.get('/', transactionController.getAllTransactions);
 router.get('/:id', transactionController.getTransactionById);
