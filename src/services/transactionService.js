@@ -2,8 +2,13 @@ const Transaction = require('../models/transactionModel');
 const { NotFoundError, ValidationError } = require('../errors');
 const { TYPES } = Transaction;
 
-async function getAllTransactions(userId = null) {
-  const list = await Transaction.find({userId}).sort({ createdAt: -1 }).lean();
+async function getAllTransactions(userId = null, filters = {}) {
+  const query = { userId };
+  if (filters.category) query.category = filters.category;
+  if (filters.date) {
+    query.date = { $regex: new RegExp(`^${filters.date}`) };
+  }
+  const list = await Transaction.find(query).sort({ createdAt: -1 }).lean();
   return list;
 }
 
@@ -76,11 +81,19 @@ async function getSummary(userId = null) {
     }
   }
 
+  const monthlyTrends = {};
+  for (const t of transactions) {
+    const month = t.date ? t.date.slice(0, 7) : new Date(t.createdAt).toISOString().slice(0, 7);
+    if (!monthlyTrends[month]) monthlyTrends[month] = { income: 0, expense: 0 };
+    monthlyTrends[month][t.type] += Number(t.amount);
+  }
+
   return {
     totalIncome,
     totalExpense,
     balance: totalIncome - totalExpense,
     byCategory,
+    monthlyTrends,
     transactionCount: transactions.length,
   };
 }

@@ -8,13 +8,19 @@
     "dev": "node --watch src/app.js",
     "test": "jest"
   },
-  "keywords": ["finance", "api", "mvc"],
+  "keywords": [
+    "finance",
+    "api",
+    "mvc"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.6",
     "dotenv": "^16.4.5",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.4"
   },
